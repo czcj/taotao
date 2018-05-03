@@ -1,0 +1,74 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 传播行为 -->
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="create*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 切面 -->
+	<bean id="printTime" class="taotaoUtil.PrintTime">
+
+	</bean>
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice"
+			pointcut="execution(* com.taotao.service.*.*(..))" />
+		<!--<aop:aspect id = "printTime" ref = "printTime">-->
+			<!--<aop:pointcut id="pointCut" expression="execution(* com.taotao.controller.IndexController.index(..)) and args(paramname1,paramname2)" />-->
+			<!--&lt;!&ndash;<aop:before method="printTime" pointcut-ref="pointCut" />&ndash;&gt;-->
+			<!--&lt;!&ndash;<aop:after method="printTime" pointcut-ref="pointCut" />&ndash;&gt;-->
+			<!--<aop:after method="printTime(java.lang.String,java.lang.Integer)" pointcut-ref="pointCut" arg-names="paramname1,paramname2"/>-->
+			<!--&lt;!&ndash;<aop:after-returning method="getReturn" pointcut-ref="pointCut" returning="obj"/>&ndash;&gt;-->
+		<!--</aop:aspect>-->
+
+		<!--<aop:aspect id="jedisReturn" ref="jedisUtil">-->
+
+			<!--<aop:pointcut id="everyf1" expression="execution(* taotaoUtil.JedisUtil.*(..))-->
+			 <!--and args(key,value,jedis)"/>-->
+			<!--&lt;!&ndash;<aop:after method="close(redis.clients.jedis.Jedis)" pointcut-ref="everyf1" arg-names="jedis"/>&ndash;&gt;-->
+			<!--&lt;!&ndash;<aop:after-throwing method="close(redis.clients.jedis.Jedis)" pointcut-ref="everyf1" arg-names="jedis"/>&ndash;&gt;-->
+			<!--<aop:after method="close(java.lang.String ,java.lang.String ,redis.clients.jedis.Jedis)" pointcut-ref="everyf1" arg-names="key,value,jedis"/>-->
+			<!--<aop:after-throwing method="close(java.lang.String ,java.lang.String ,redis.clients.jedis.Jedis)" pointcut-ref="everyf1" arg-names="key,value,jedis"/>-->
+
+			<!--<aop:pointcut id="everyf2" expression="execution(* taotaoUtil.JedisUtil.*(..))-->
+			<!--and args(key,jedis)"/>-->
+			<!--<aop:after method="close(java.lang.String,redis.clients.jedis.Jedis)" pointcut-ref="everyf2" arg-names="key,jedis"/>-->
+			<!--<aop:after-throwing method="close(java.lang.String,redis.clients.jedis.Jedis)" pointcut-ref="everyf2" arg-names="key,jedis"/>-->
+
+			<!--<aop:pointcut id="everyf3" expression="execution(* taotaoUtil.JedisUtil.*(..))-->
+			 <!--and args(key,value,time,jedis)"/>-->
+			<!--<aop:after method="close(java.lang.String,java.lang.String,java.lang.Integer,redis.clients.jedis.Jedis)" pointcut-ref="everyf3" arg-names="key,value,time,jedis"/>-->
+			<!--<aop:after-throwing method="close(java.lang.String,java.lang.String,java.lang.Integer,redis.clients.jedis.Jedis)" pointcut-ref="everyf3" arg-names="key,value,time,jedis"/>-->
+
+			<!--<aop:pointcut id="everyf4" expression="execution(* taotaoUtil.JedisUtil.*(..))-->
+			 <!--and args(key,time,jedis)"/>-->
+			<!--<aop:after method="close(java.lang.String,java.lang.Integer,redis.clients.jedis.Jedis)" pointcut-ref="everyf4" arg-names="key,time,jedis"/>-->
+			<!--<aop:after-throwing method="close(java.lang.String,java.lang.Integer,redis.clients.jedis.Jedis)" pointcut-ref="everyf4" arg-names="key,time,jedis"/>-->
+
+		<!--</aop:aspect>-->
+	</aop:config>
+
+</beans>
